@@ -1,0 +1,121 @@
+---
+title: <span style="color:#7D1EBB"> Aprendizaje automático supervisado y no supervisado
+  </span>
+output:
+  revealjs::revealjs_presentation:
+    
+    theme: solarized
+    
+    highlight: haddock
+    
+    center: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## <span style="color:#7D1EBB">Redes neuronales</span>
+
+<p style='text-align: justify;'>  
+Una red neuronal, como su nombre indica, toma su forma computacional del mismo modo que funcionan las neuronas en un sistema biológico. En esencia, para una lista de entradas dada, una red neuronal realiza una serie de pasos de procesamiento antes de devolver una salida. La complejidad de las redes neuronales radica en el número de pasos de procesamiento y en la complejidad de cada uno de ellos.
+Un ejemplo de cómo puede funcionar una red neuronal es usando puertas lógicas. Usamos funciones lógicas a menudo en programación, como repaso, una función AND solo es cierta si ambas entradas lo son, si alguna o ambas son falsas, el resultado es falso.</p>
+
+
+##
+
+
+```{r}
+TRUE & TRUE
+TRUE & FALSE
+FALSE & FALSE
+```
+##
+<p style='text-align: justify;'>  
+Podemos definir una red neuronal simple como una que toma dos entradas, calcula la función AND y nos da un resultado. Esto puede representarse por medio de una figura donde tenemos capas y nodos. Las capas son secciones verticales de la red y los nodos son los puntos de cálculo dentro de cada capa. Las matemáticas de esto requieren uso de una variable de sesgo, que es solo una constante que agregamos a la ecuación para propósitos de cálculo y es representada como su propio nodo, generalmente en la parte superior de cada capa en la red neuronal.</p>
+
+##
+<p style='text-align: justify;'>  
+En el caso de la función AND, usaremos valores numéricos que pasamos por una función de clasificación para dar un valor de 1 para VERDADERO y 0 para FALSO. Podemos hacer esto usando la función sigmoide: </p>
+
+$$
+f(x)=\dfrac{1}{1+e^{-x}}
+$$
+<p style='text-align: justify;'>  
+Entonces para valores negativos menores que -5, la función es 0. Para valores positivos $x$ mayores que 5, la función es 1. Si tuviéramos un conjunto predefinido de pesos para cada nodo en la red neuronal, podríamos tener una imagen que se parece a la *Figura 2-10*. </p>
+
+
+##
+<center>
+
+![*Figura 2-10. Un ejemplo de red neuronal representada en un diagrama que se lee de izquierda a derecha*](https://raw.githubusercontent.com/Semillero-IPREA/Informes-IPREA/main/imagenes/figura2-10.png?token=ASRWCNOQIQ5H6KLJTFDSBXTAJQKOK)
+
+</center>
+##
+
+<p style='text-align: justify;'>  
+Comenzamos con las entradas $x_1$, $x_2$ y el nodo de sesgo que es solo una constante aditiva. Calculamos todos estos en el círculo vacío, esto es, multiplicamos cada variable por su peso correspondiente y luego sumamos dichas cantidades, este nodo vacío recibe el nombre de nodo de cálculo. El siguiente paso que realizamos es poner el resultado del nodo de cálculo en una función de activación, que casi siempre es una función sigmoide. La salida de la función sigmoide es el resultado de la red neuronal.</p>
+
+##
+
+<p style='text-align: justify;'>  
+Para calcular el resultado de una puerta AND $(h(x_1,x_2))$, necesitamos tomar entradas para $x_1$ y $x_2$. Definimos 1 para verdadero y 0 para falso. La última entrada será la variable de sesgo, que será 1 en este caso. Cuando la red esté terminada, encontraremos pesos que están atados a cada entrada. Luego construimos una ecuación usando esos pesos y averiguamos cuál es el resultado de esa ecuación, este resultado lo pasamos por una función sigmoide (círculo vacío) y obtenemos la respuesta del otro</p>
+
+
+##
+<p style='text-align: justify;'> 
+Matemáticamente tenemos lo siguiente: $h(x_1,x_2)=–20 + 15x_1 + 17x_2$, con lo cual, si $x_1$ es verdadero, será igual a 1, de lo contrario será 0. Luego resolvemos la ecuación y pasamos el valor final a través de la sigmoide. Repetimos esto para todas las combinaciones de nuestras variables de entrada:
+</p>
+
+##
+\begin{align*}
+     x_1 = 1, x_2 = 1, \hspace{2cm}  f(h(1,1)) & = f(-20+15+17)\\
+                                              & = f(12) = \approx  1 \\ 
+    x_1 = 1, x_2 = 0, \hspace{2cm}f(h(1,0))&= f(-20+15)\\
+                                          &= f(-5)=\approx 0 \\ %2do
+     x_1 = 0, x_2 = 1, \hspace{2cm} f(h(0,1)) &= f(-20+17)\\
+                                             &= f (-3) =  \approx 0\\ %3ro 
+    x_1 = 0, x_2 = 0, \hspace{2cm} f(h(0,0))&= f(-20) =\approx 0
+\end{align*}
+
+##
+<p style='text-align: justify;'>  
+En resumen, comenzamos con una sola capa de variables que tienen un peso predefinido vinculado a ellas. Pasamos eso a una capa de procesamiento, en este caso una función sigmoide, y obtuvimos un resultado. En su nivel más básico, esta es una red neuronal. En este caso con la función AND fue sencillo, sin embargo, si quisiéramos hacer lo mismo para las funciones OR o XOR el procedimiento para la red neuronal se convertiría en algo mucho más engorroso. </p>
+
+##
+<p style='text-align: justify;'>  
+Los siguientes son algunos aspectos importantes en una red neuronal.
+
+* ***Capa de entrada (input layer):***
+Esta es una capa que incluye una serie de características, incluido un nodo de sesgo, que es
+a menudo solo un parámetro de particular.
+
+* ***Capa oculta o de "cálculo" (Hidden layer):***
+Esta es la capa que calcula alguna función de cada característica. El número de
+los nodos en esta capa oculta dependen del cálculo. A veces, puede ser
+tan simple como un nodo en esta capa. Otras veces, la imagen puede ser más compleja
+con múltiples capas ocultas.
+
+* ***Capa de salida (output layer):***
+Este es un nodo de procesamiento final, que podría ser una función única.</p>
+
+##  
+Para el siguiente ejemplo usemos de nuevo el conjunto de datos `iris`
+
+```{r}
+set.seed(123)
+library(nnet)
+iris.nn <- nnet(Species ~ ., data = iris, size = 30)
+```
+
+##
+
+<p style='text-align: justify;'>  
+Este código usa la función `nnet()` con el operador que hemos estado usando en ejemplos previos. La opción `size=2` nos dice que estamos usando dos capas ocultas para los cálculos, las cuales deben ser especificadas explícitamente. Las salidas que vemos son las iteraciones de la red.  Finalmente, cuando la red neuronal ya convergió, podemos usarla para la predicción.</p>
+
+```{r}
+knitr::kable(table(iris$Species, predict(iris.nn, iris, type = "class")))
+
+```
+
+
